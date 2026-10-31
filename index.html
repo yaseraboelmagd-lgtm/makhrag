@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مخرج — اخرج من قسط العربية بأمان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="supabase.js"></script>
+<script src="config.js"></script>
+<style>
+:root{--bg:#F3F6F5;--sf:#fff;--tx:#10262B;--mu:#5B6E72;--br:#D5DFDD;--pt:#0E3A40;--pt2:#164E56;--am:#F2A33A;--am-tx:#10262B;--ok:#1E8E5A;--er:#C2412D;--ptt:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1A1D;--sf:#122A2E;--tx:#E8F0EE;--mu:#93A9AC;--br:#24424A;--pt:#0A2A2F;--pt2:#1B5A63;--ok:#4CC58A;--er:#F0806D}}
+:root[data-theme="dark"]{--bg:#0B1A1D;--sf:#122A2E;--tx:#E8F0EE;--mu:#93A9AC;--br:#24424A;--pt:#0A2A2F;--pt2:#1B5A63;--ok:#4CC58A;--er:#F0806D}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--tx);font:400 16px/1.8 Tajawal,"Segoe UI",Tahoma,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--pt);z-index:30}
+a{color:inherit}
+.w{max-width:1080px;margin:auto;padding:0 18px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--pt);color:#fff}
+nav .w{display:flex;align-items:center;gap:16px;height:56px}
+nav b{font-size:22px;font-weight:800;margin-inline-end:auto}
+nav a{text-decoration:none;font-size:14px;opacity:.85}
+nav .lk{display:none}
+@media(min-width:760px){nav .lk{display:inline}}
+button,input,select{font:inherit;color:inherit}
+.btn{background:var(--am);color:var(--am-tx);border:0;border-radius:8px;padding:10px 20px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.g{background:transparent;border:1.5px solid currentColor}
+:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.hero{background:var(--pt);color:#fff;padding:44px 0 56px}
+.hero .w{display:grid;gap:32px}
+@media(min-width:860px){.hero .w{grid-template-columns:1fr 1fr;align-items:center}}
+h1{font-size:clamp(30px,5.4vw,52px);line-height:1.3;font-weight:800}
+.hero p{opacity:.85;margin:14px 0 22px;max-width:46ch}
+.eq{background:var(--sf);color:var(--tx);border-radius:14px;padding:20px;border:1px solid var(--br)}
+.eq h3{font-size:17px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--br)}
+.row:last-of-type{border:0}
+.row.t{font-weight:800;font-size:20px;border-top:2px solid var(--tx);border-bottom:0;margin-top:6px;padding-top:12px}
+.pos{color:var(--ok)}.neg{color:var(--er)}
+label{display:block;font-size:14px;color:var(--mu);margin:10px 0 4px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--br);border-radius:8px;background:var(--bg)}
+input[type=range]{padding:0;accent-color:var(--pt2)}
+sec{display:block;padding:54px 0}
+h2{font-size:clamp(24px,3.6vw,34px);line-height:1.4;margin-bottom:8px;font-weight:800}
+.sub{color:var(--mu);max-width:60ch;margin-bottom:26px}
+.steps{display:grid;gap:0;counter-reset:s}
+@media(min-width:760px){.steps{grid-template-columns:repeat(4,1fr)}}
+.st{padding:16px 0 16px 16px;border-top:3px solid var(--pt2);counter-increment:s}
+.st::before{content:counter(s);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--pt2);color:#fff;font-weight:700;font-size:14px;margin-bottom:6px}
+.st h4{font-size:17px}.st p{color:var(--mu);font-size:14.5px}
+.g2{display:grid;gap:22px}
+@media(min-width:860px){.g2{grid-template-columns:1fr 1fr}}
+.card{background:var(--sf);border:1px solid var(--br);border-radius:12px;padding:18px}
+.res{margin-top:14px;padding:14px;border-radius:10px;background:var(--bg);border:1px solid var(--br);font-size:15px}
+.res ul{padding-inline-start:20px;margin-top:6px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{border:1px solid var(--br);background:var(--sf);border-radius:99px;padding:6px 16px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--pt2);color:#fff;border-color:var(--pt2)}
+.cars{display:grid;gap:14px}
+@media(min-width:700px){.cars{grid-template-columns:repeat(3,1fr)}}
+.car{background:var(--sf);border:1px solid var(--br);border-radius:12px;overflow:hidden}
+.car svg{display:block;width:100%;height:92px;background:var(--bg)}
+.car div{padding:12px 14px}
+.car h4{font-size:16px}.car small{color:var(--mu)}
+.tag{display:inline-block;font-size:12px;padding:1px 10px;border-radius:99px;margin-top:6px;background:var(--bg);border:1px solid var(--br)}
+.tag.ok{color:var(--ok);border-color:var(--ok)}
+.pg{display:grid;gap:12px}
+@media(min-width:760px){.pg{grid-template-columns:repeat(3,1fr)}}
+.pg .card h4{margin-bottom:4px}.pg .card p{font-size:14.5px;color:var(--mu)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px;text-align:start;border-bottom:1px solid var(--br)}
+.sc{overflow-x:auto}
+.pill{padding:2px 10px;border-radius:99px;font-size:12px;background:var(--am);color:var(--am-tx)}
+.road{display:grid;gap:0}
+@media(min-width:760px){.road{grid-template-columns:repeat(3,1fr)}}
+.rd{padding:16px;border-inline-start:4px solid var(--am);background:var(--sf);margin:0 0 10px}
+.rd h4{font-size:17px}.rd p{font-size:14.5px;color:var(--mu)}
+details{background:var(--sf);border:1px solid var(--br);border-radius:10px;padding:12px 16px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:700}
+details p{color:var(--mu);margin-top:6px}
+.note{font-size:13px;color:var(--mu);margin-top:10px}
+footer{background:var(--pt);color:#fff;padding:30px 0;font-size:14px;opacity:.95}
+#toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));inset-inline:16px;max-width:420px;margin:auto;background:var(--tx);color:var(--bg);padding:12px 16px;border-radius:10px;display:none;z-index:40}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="w"><b>مخرج</b>
+<a class="lk" href="#how">إزاي بيشتغل</a><a class="lk" href="#cars">السيارات</a><a class="lk" href="#partners">الشركاء</a><a class="lk" href="#admin">لوحة التحكم</a><a class="lk" href="#model">الإيرادات</a>
+<button class="btn g" id="lgn" style="padding:6px 14px">دخول</button><a class="btn" href="#seller">ابدأ التخارج</a></div></nav>
+
+<header class="hero"><div class="w">
+<div>
+<h1>عربيتك عليها قسط ومش عاوزها؟ اعرف هتخرج بكام قبل ما تبيع.</h1>
+<p>مخرج بيجمع صاحب العربية والمشتري وجهة التمويل ومركز الفحص في مسار واحد واضح: تقييم، تسوية، نقل ملكية قانوني.</p>
+<a class="btn" href="#seller">قيّم عربيتي</a> <a class="btn g" href="#cars">أنا مشتري</a>
+</div>
+<div class="eq" aria-live="polite">
+<h3>معادلة الخروج</h3>
+<label for="hp">سعر العربية في السوق: <b id="hpv"></b></label>
+<input id="hp" type="range" min="200000" max="3000000" step="10000" value="800000">
+<label for="hb">المتبقي للتسوية مع الممول: <b id="hbv"></b></label>
+<input id="hb" type="range" min="0" max="3000000" step="10000" value="450000">
+<div class="row"><span>قيمة البيع المتوقعة</span><b id="e1"></b></div>
+<div class="row"><span>تسوية الممول</span><b id="e2"></b></div>
+<div class="row"><span>عمولة مخرج (1%، أدنى 5,000)</span><b id="e3"></b></div>
+<div class="row t"><span>صافي ليك</span><b id="e4"></b></div>
+</div></div></header>
+
+<sec id="how"><div class="w">
+<h2>من الطلب لنقل الملكية في أربع خطوات</h2>
+<p class="sub">بدل مئات المكالمات والورق المبعثر، كل طلب ليه مسار وحالة وفريق متابعة.</p>
+<div class="steps">
+<div class="st"><h4>سجّل العربية</h4><p>الموديل والحالة والممول والقسط والمتبقي.</p></div>
+<div class="st"><h4>فحص وتقييم</h4><p>تقرير من مركز فحص معتمد وسعر حسب السوق.</p></div>
+<div class="st"><h4>مشتري مناسب</h4><p>عرض كامل بالسعر والمبلغ المطلوب وموقف التمويل.</p></div>
+<div class="st"><h4>تسوية ونقل</h4><p>نقل الالتزام بموافقة الممول، أو سداد وفك الحظر ثم نقل الملكية.</p></div>
+</div></div></sec>
+
+<sec id="seller" style="background:var(--sf)"><div class="w g2">
+<div>
+<h2>سجّل عربيتك واعرف المسار</h2>
+<p class="sub">النتيجة تقديرية ومبدئية، والسعر النهائي بعد الفحص وموافقة الجهة الممولة.</p>
+<div class="card"><div id="sf">
+<label for="sn">الاسم</label><input id="sn" autocomplete="name">
+<label for="sm">العربية (الماركة والموديل)</label><input id="sm" placeholder="مثال: هيونداي إلنترا 2022">
+<label for="sc">الحالة</label><select id="sc"><option value="1">ممتازة</option><option value="0.94" selected>جيدة</option><option value="0.86">تحتاج صيانة</option></select>
+<label for="sv">السعر المتوقع في السوق (جنيه)</label><input id="sv" type="number" inputmode="numeric" value="800000">
+<label for="sr">المتبقي لتسوية التمويل (جنيه)</label><input id="sr" type="number" inputmode="numeric" value="450000">
+<label for="sq">القسط الشهري (جنيه)</label><input id="sq" type="number" inputmode="numeric" value="18000">
+<label for="sb">الممول</label><select id="sb"><option>بنك</option><option>شركة تمويل</option><option>الوكيل</option></select>
+<label for="sk">الدولة</label><select id="sk"><option value="EG">مصر</option><option value="SA">السعودية</option><option value="AE">الإمارات</option></select>
+<label for="sp">رقم الموبايل (بالكود الدولي)</label><input id="sp" type="tel" placeholder="+201001234567" autocomplete="tel">
+<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="sw" style="width:auto"> أوافق على استلام تحديثات الطلب على واتساب</label>
+<div id="sdw"><label for="sd">المستندات (رخصة، عقد التمويل، صور) حتى 5 ملفات</label><input id="sd" type="file" multiple accept="image/*,application/pdf"></div>
+<label style="display:flex;gap:8px;align-items:flex-start;margin-top:12px"><input type="checkbox" id="lg" style="width:auto;margin-top:6px"> <span>أوافق على <a href="legal/terms.html" target="_blank">الشروط</a> و<a href="legal/privacy.html" target="_blank">سياسة الخصوصية</a> و<a href="legal/broker-agreement.html" target="_blank">عقد الوساطة</a></span></label><p style="margin-top:14px"><button class="btn" id="go">احسب وابعت الطلب</button></p>
+</div></div></div>
+<div><h2>نتيجة التقييم</h2><div class="res" id="out">املا البيانات واضغط احسب لتشوف المسار والمستندات المطلوبة.</div>
+<p class="note">بيع أي أصل عليه تمويل لازم يتم بموافقة الجهة الممولة ووفق الإجراءات القانونية. مخرج بينظم الخطوات ومش بيتجاوزها.</p></div>
+</div></sec>
+
+<sec id="cars"><div class="w">
+<h2>فرص للمشترين: عربيات جاهزة للتخارج</h2>
+<p class="sub">كل عرض فيه المبلغ اللي هتدفعه فعلا وموقف التمويل، مش بس صورة وسعر. (بيانات تجريبية)</p>
+<div class="tabs" id="tb" role="group" aria-label="تصفية">
+<button aria-pressed="true" data-f="all">الكل</button><button aria-pressed="false" data-f="t">نقل التزام متاح</button><button aria-pressed="false" data-f="s">تسوية وبيع</button><button aria-pressed="false" data-f="u">أقل من 700 ألف</button></div>
+<div class="cars" id="cl"></div>
+</div></sec>
+
+<sec id="partners" style="background:var(--sf)"><div class="w">
+<h2>كل طرف له حساب وصلاحيات</h2>
+<p class="sub">منظومة واحدة بإدارة مركزية، وكل شريك يشوف دوره بس.</p>
+<div class="pg">
+<div class="card"><h4>صاحب العربية</h4><p>يتابع الطلب ويرفع المستندات ويوافق على السعر والتسوية.</p></div>
+<div class="card"><h4>المشتري والتاجر</h4><p>يشوف الفرص المناسبة، يقدم عرض، ويطلب تمويل جديد.</p></div>
+<div class="card"><h4>مركز الفحص</h4><p>يرفع تقرير الحالة بالصور ودرجة التقييم لكل عربية.</p></div>
+<div class="card"><h4>جهة التمويل</h4><p>تراجع الموقف، تحدد مبلغ التسوية، وتوافق على نقل الالتزام.</p></div>
+<div class="card"><h4>شركة التأمين</h4><p>تصدر أو تنقل الوثيقة مع نقل الملكية.</p></div>
+<div class="card"><h4>أصحاب الأساطيل</h4><p>يبيعوا أكتر من عربية في طلب واحد بعمولة متفق عليها.</p></div>
+</div></div></sec>
+
+<sec id="admin"><div class="w">
+<h2>لوحة تحكم فريق التشغيل</h2>
+<p class="sub">الطلبات بتتحفظ في قاعدة بيانات مشتركة. المشرف يشوف كل الطلبات ويغيّر حالتها، والعميل يشوف طلباته بس.</p><p class="pill" id="role" style="display:inline-block;margin-bottom:10px">جاري تحديد دورك...</p>
+<div class="card"><div class="sc"><table><thead><tr><th>العميل</th><th>العربية</th><th>صافي البائع</th><th>العمولة</th><th>المستندات</th><th>الحالة</th></tr></thead><tbody id="rq"></tbody></table></div>
+<p class="row" style="border:0;margin-top:8px"><span>العمولة المتوقعة: <b id="tc">0</b> جنيه</span><span>الصفقات المكتملة: <b id="td">0</b></span><span>اهتمام المشترين: <b id="of">0</b></span></p>
+<button class="btn g" id="clr" style="margin-top:6px;color:var(--mu)">مسح الطلبات (محلي)</button> <button class="btn g" id="ex" hidden style="margin-top:6px">تصدير CSV</button></div>
+</div></sec>
+
+<sec id="deals"><div class="w"><h2>الصفقات والعمولة</h2><p class="sub">بعد قبول العرض بتتسدد العمولة عبر إنستاباي، وبيانات الطرف الآخر بتتفتح بعد تأكيد السداد.</p><div id="dl"><p class="note">سجّل دخول لعرض صفقاتك.</p></div></div></sec>
+
+<sec id="model" style="background:var(--sf)"><div class="w g2">
+<div><h2>حاسبة الإيرادات</h2><p class="sub">غيّر الأرقام وشوف حجم المشروع. الأرقام افتراضية للتخطيط.</p></div>
+<div class="card">
+<label for="n">عدد العمليات المكتملة: <b id="nv"></b></label><input id="n" type="range" min="20" max="1000" step="10" value="200">
+<label for="p">متوسط سعر العربية: <b id="pv"></b></label><input id="p" type="range" min="300000" max="2500000" step="50000" value="900000">
+<label for="c">نسبة العمولة: <b id="cv"></b></label><input id="c" type="range" min="0.5" max="3" step="0.1" value="1">
+<div class="row"><span>متوسط عمولة العملية</span><b id="m1"></b></div>
+<div class="row"><span>إيراد العمولات</span><b id="m2"></b></div>
+<div class="row"><span>اشتراكات تجار (50 تاجر × 1,500 × 12)</span><b id="m3"></b></div>
+<div class="row"><span>خدمات فحص وتقييم (30% من العمليات × 800)</span><b id="m4"></b></div>
+<div class="row t"><span>إجمالي سنوي</span><b id="m5"></b></div>
+</div></div></sec>
+
+<sec><div class="w">
+<h2>خريطة التوسع</h2><p class="sub">ابدأ بخدمة واحدة قوية، وبعدها وسّع.</p>
+<div class="road">
+<div class="rd"><h4>المرحلة الأولى: مصر</h4><p>تخارج السيارات الممولة، شبكة فحص وتجار وممولين، إثبات نموذج التشغيل.</p></div>
+<div class="rd"><h4>المرحلة الثانية: السعودية والإمارات</h4><p>تشغيل مستقل لكل سوق داخل نفس النظام، وفق تراخيص وشروط التمويل المحلية.</p></div>
+<div class="rd"><h4>المرحلة الثالثة: قطاعات جديدة</h4><p>معدات طبية، ماكينات، موتوسيكلات، ووحدات تجارية بنفس المنطق.</p></div>
+</div></div></sec>
+
+<sec style="background:var(--sf)"><div class="w">
+<h2>أسئلة شائعة</h2>
+<details><summary>هل أقدر أبيع عربية عليها حظر؟</summary><p>أيوه، لكن بموافقة الممول: إما نقل الالتزام للمشتري، أو سداد المتبقي وفك الحظر ثم نقل الملكية.</p></details>
+<details><summary>مخرج بياخد عمولة إمتى؟</summary><p>بعد اكتمال الصفقة فقط، وبنسبة معلنة مسبقا (تبدأ من 5,000 جنيه).</p></details>
+<details><summary>ازاي بيتحمي حق المشتري؟</summary><p>فحص معتمد، مراجعة موقف التمويل، وعقد ونقل ملكية رسمي قبل تسليم أي مبالغ نهائية.</p></details>
+<details><summary>الحاجات اللي لازم أجهزها قبل الإطلاق؟</summary><p>سجل تجاري وعقد خدمة وسيط، شروط وأحكام وسياسة خصوصية، اتفاقيات مع ممولين ومراكز فحص، ومراجعة قانونية لكل دولة.</p></details>
+</div></sec>
+
+<footer><div class="w">مخرج: منصة تنظيم التخارج من العربيات الممولة. <a href="legal/terms.html">الشروط</a> | <a href="legal/privacy.html">الخصوصية</a> | <a href="legal/broker-agreement.html">عقد الوساطة</a>. الأرقام تقديرية حتى اكتمال الفحص وموافقة الممول. <button class="btn g" id="th" style="margin-inline-start:12px;padding:4px 12px;font-size:13px">وضع داكن / فاتح</button></div></footer>
+<dialog id="au" style="margin:auto;border:1px solid var(--br);border-radius:12px;padding:20px;background:var(--sf);color:var(--tx);max-width:340px;width:92%"><h3>دخول أو حساب جديد</h3>
+<label for="ae">الإيميل</label><input id="ae" type="email" autocomplete="email"><label for="ap">كلمة السر (8 حروف على الأقل)</label><input id="ap" type="password" autocomplete="current-password">
+<p style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="si">دخول</button><button class="btn g" id="su">حساب جديد</button><button class="btn g" id="ax" style="color:var(--mu)">إغلاق</button></p></dialog>
+<div id="toast" role="status"></div>
+
+
+<script>const $=id=>document.getElementById(id),f=n=>Math.round(n).toLocaleString("ar-EG")+" جنيه",com=v=>Math.max(5000,v*.01);
+function eq(){const h=+$("hp").value,b=+$("hb").value,c=com(h);$("hpv").textContent=f(h);$("hbv").textContent=f(b);$("e1").textContent=f(h);$("e2").textContent="− "+f(b);$("e3").textContent="− "+f(c);const n=h-b-c;$("e4").textContent=(n<0?"− ":"")+f(Math.abs(n));$("e4").className=n<0?"neg":"pos"}
+["hp","hb"].forEach(i=>$(i).oninput=eq);eq();
+function mod(){const n=+$("n").value,p=+$("p").value,r=+$("c").value,a=Math.max(5000,p*r/100),cm=n*a,sb=50*1500*12,ins=Math.round(n*.3)*800;$("nv").textContent=n.toLocaleString("ar-EG");$("pv").textContent=f(p);$("cv").textContent=r+"%";$("m1").textContent=f(a);$("m2").textContent=f(cm);$("m3").textContent=f(sb);$("m4").textContent=f(ins);$("m5").textContent=f(cm+sb+ins)}
+["n","p","c"].forEach(i=>$(i).oninput=mod);mod();
+let flt="all",cars=[["هيونداي إلنترا 2022","780,000","320,000","t","جيدة"],["كيا سيراتو 2021","650,000","210,000","s","ممتازة"],["تويوتا كورولا 2023","1,150,000","540,000","t","ممتازة"],["نيسان صني 2020","520,000","150,000","s","جيدة"],["شيفروليه أوبترا 2019","430,000","90,000","s","تحتاج صيانة"],["MG ZS 2022","840,000","410,000","t","جيدة"]];
+function drawCars(flt){$("cl").innerHTML=cars.filter(c=>flt=="all"||(flt=="u"?+c[1].replace(/,/g,"")<700000:c[3]==flt)).map(c=>`<article class="car"><svg viewBox="0 0 200 92" aria-hidden="true"><path d="M20 62h160v-9l-18-3-14-18H70L50 50l-30 4z" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--pt2)"/><circle cx="58" cy="64" r="11" fill="var(--bg)" stroke="currentColor" stroke-width="3" style="color:var(--pt2)"/><circle cx="144" cy="64" r="11" fill="var(--bg)" stroke="currentColor" stroke-width="3" style="color:var(--pt2)"/></svg><div><h4>${c[0]}</h4><small>الحالة: ${c[4]}</small><p>السعر: <b>${c[1]}</b> جنيه</p><p>المطلوب منك: <b>${c[2]}</b> جنيه</p><span class="tag ${c[3]=="t"?"ok":""}">${c[3]=="t"?"نقل التزام متاح":"تسوية وبيع"}</span><p><button class="btn" data-i="${cars.indexOf(c)}" style="padding:4px 14px;font-size:14px;margin-top:8px">أنا مهتم</button></p></div></article>`).join("")}
+drawCars("all");
+$("tb").onclick=e=>{const b=e.target.closest("button");if(!b)return;[...$("tb").children].forEach(x=>x.setAttribute("aria-pressed",x==b));flt=b.dataset.f;drawCars(flt)};
+
+function toast(t){const x=$("toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",3600)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const C=window.MAKHRAG_CONFIG||{},STK=["new","inspection","lender_review","listed","sold","cancelled"],STA=["جديد","قيد الفحص","مراجعة الممول","معروض للمشترين","مكتمل","ملغي"];
+let sb=null,user=null,isOps=false,reqs=[],offers=0,subbed=false,carIds=[];
+const cond=x=>x>=1?"excellent":x>=.94?"good":"needs_work";
+const openAuth=()=>$("au").showModal();
+$("clr").hidden=true;
+async function load(){
+if(!sb)return;$("lgn").textContent=user?"خروج":"دخول";
+const L=await sb.from("listings").select("id,title,price,buyer_due,mode,condition").eq("published",true);
+if(L.data&&L.data.length){const n=x=>Number(x).toLocaleString("en-US");cars=L.data.map(x=>[x.title,n(x.price),n(x.buyer_due),x.mode=="transfer"?"t":"s",x.condition||"-"]);carIds=L.data.map(x=>x.id);drawCars(flt)}
+if(!user){$("role").textContent="سجّل دخول عشان تبعت طلب وتتابعه";reqs=[];table();return}
+const P=await sb.from("profiles").select("role").eq("id",user.id).single();isOps=["ops","admin"].includes(P.data?.role);
+$("role").textContent=isOps?"دورك: مشرف تشغيل (بتشوف كل الطلبات)":"دورك: عميل (بتشوف طلباتك بس)";$("ex").hidden=!isOps;
+const R=await sb.from("exit_requests").select("*,profiles(full_name,phone),payments(purpose,status)").order("created_at",{ascending:false});reqs=R.data||[];
+if(isOps){const o=await sb.from("offers").select("id",{count:"exact",head:true});offers=o.count||0}
+table();loadDeals()}
+function table(){
+$("rq").innerHTML=reqs.length?reqs.map((r,i)=>{const net=r.market_value-r.settlement_amount-r.commission,paid=(r.payments||[]).some(p=>p.purpose=="inspection"&&p.status=="paid");
+return `<tr><td>${esc(r.profiles?.full_name||"-")}</td><td>${esc(r.make_model)}</td><td class="${net<0?"neg":"pos"}">${f(net)}</td><td>${f(r.commission)}</td><td><button class="btn g" data-d="${i}" style="padding:2px 10px;font-size:13px">عرض</button></td><td>${isOps?`<select data-i="${i}" aria-label="الحالة">${STK.map((s,j)=>`<option value="${s}" ${s==r.status?"selected":""}>${STA[j]}</option>`).join("")}</select> <button class="btn g" data-p="${i}" style="padding:2px 10px;font-size:13px">نشر</button>`:`<span class="pill">${STA[STK.indexOf(r.status)]}</span>${!paid&&r.status=="new"?` <button class="btn" data-pay="${i}" style="padding:2px 10px;font-size:13px">ادفع رسوم الفحص</button>`:""}`}</td></tr>`}).join(""):'<tr><td colspan="6">مفيش طلبات لسه.</td></tr>';
+$("tc").textContent=Math.round(reqs.reduce((a,r)=>a+Number(r.commission||0),0)).toLocaleString("ar-EG");$("td").textContent=reqs.filter(r=>r.status=="sold").length.toLocaleString("ar-EG");$("of").textContent=offers.toLocaleString("ar-EG")}
+$("rq").onclick=async e=>{const b=e.target.closest("button");if(!b||!sb)return;const d=b.dataset;
+if(d.d!=null){const r=reqs[+d.d],q=await sb.from("documents").select("storage_path").eq("request_id",r.id);const L=[];for(const x of q.data||[]){const u=await sb.storage.from("documents").createSignedUrl(x.storage_path,600);if(u.data)L.push(`<a href="${esc(u.data.signedUrl)}" target="_blank" rel="noopener">${esc(x.storage_path.split("/").pop().slice(37,70))}</a>`)}b.parentNode.innerHTML=L.join("<br>")||"-"}
+if(d.p!=null){const r=reqs[+d.p],x=await sb.from("listings").insert({request_id:r.id,title:r.make_model,price:r.market_value,buyer_due:r.settlement_amount,mode:"settle",condition:r.condition,country:r.country,published:true});if(x.error){toast("تعذر النشر: "+x.error.message);return}await sb.from("exit_requests").update({status:"listed"}).eq("id",r.id);toast("اتنشر للمشترين");load()}
+if(d.pay!=null){const r=reqs[+d.pay];b.disabled=true;const x=await sb.functions.invoke("create-payment",{body:{request_id:r.id,purpose:"inspection"}});b.disabled=false;if(x.error||!x.data?.url){toast("تعذر فتح الدفع");return}location.href=x.data.url}};
+$("rq").onchange=async e=>{const i=e.target.dataset.i;if(i==null||!sb)return;const x=await sb.from("exit_requests").update({status:e.target.value}).eq("id",reqs[+i].id);toast(x.error?"مش مسموح":"اتحدثت الحالة وهيوصل إشعار للعميل");load()};
+$("cl").onclick=async e=>{const b=e.target.closest("button[data-i]");if(!b)return;if(!user)return openAuth();const id=carIds[+b.dataset.i];if(!id){toast("ده عرض تجريبي");return}const r=await sb.from("offers").insert({listing_id:id});toast(r.error?(r.error.code=="23505"?"سبق وبعت اهتمامك":"تعذر الإرسال"):"وصل اهتمامك للفريق")};
+$("go").onclick=async()=>{
+if(!sb){toast("الواجهة مش متوصلة بقاعدة البيانات (config.js)");return}if(!user)return openAuth();
+const n=$("sn").value.trim(),m=$("sm").value.trim(),v=+$("sv").value*+$("sc").value,b=+$("sr").value,q=+$("sq").value,k=$("sk").value;
+if(!n||!m||!(v>0)){toast("اكتب الاسم والعربية والسعر");return}if(!$("lg").checked){toast("لازم توافق على الشروط الأول");return}
+$("go").disabled=true;
+try{
+await sb.from("profiles").update({full_name:n,phone:$("sp").value.trim()||null,whatsapp_opt_in:$("sw").checked,country:k}).eq("id",user.id);
+const D=await sb.from("legal_documents").select("id").eq("country",k).eq("active",true);
+if(D.data?.length){const a=await sb.from("legal_acceptances").upsert(D.data.map(x=>({document_id:x.id})),{onConflict:"user_id,document_id",ignoreDuplicates:true});if(a.error)throw a.error}
+const ins=await sb.from("exit_requests").insert({make_model:m,condition:cond(+$("sc").value),market_value:v,settlement_amount:b,monthly_installment:q||null,financier:$("sb").value,country:k}).select().single();
+if(ins.error)throw ins.error;
+for(const fi of [...$("sd").files].slice(0,5)){if(fi.size>10485760){toast("الملف "+fi.name+" أكبر من 10MB");continue}
+const path=`${user.id}/${ins.data.id}/${crypto.randomUUID()}-${fi.name.replace(/[^\w.-]/g,"_")}`;const up=await sb.storage.from("documents").upload(path,fi);
+if(up.error)toast("تعذر رفع "+fi.name);else await sb.from("documents").insert({request_id:ins.data.id,kind:"other",storage_path:path})}
+const c=ins.data.commission,net=v-b-c;
+$("out").innerHTML=`<p class="${net<0?"neg":"pos"}"><b>${net<0?"سعر البيع أقل من المتبقي. المسار: نقل التزام بموافقة الممول أو تغطية الفرق.":"سعر البيع بيغطي المتبقي. المسار: تسوية وفك حظر ثم نقل ملكية."}</b></p><div class="row"><span>العمولة (تتحصّل بعد اكتمال الصفقة فقط)</span><b>${f(c)}</b></div><div class="row"><span>صافي ليك تقديري</span><b>${net<0?"− ":""}${f(Math.abs(net))}</b></div><p>تقدر تتابع طلبك وتدفع رسوم الفحص من لوحة التحكم تحت.</p>`;
+toast("تم تسجيل طلبك");load()
+}catch(x){toast(/legal|terms/i.test(x.message||"")?"لازم تقبل الشروط المحدثة":"تعذر الإرسال: "+(x.message||""))}
+$("go").disabled=false};
+$("ex").onclick=()=>{const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"',csv="\ufeff"+["العميل,العربية,الدولة,العمولة,الحالة",...reqs.map(r=>[r.profiles?.full_name,r.make_model,r.country,r.commission,r.status].map(q).join(","))].join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="requests.csv";a.click()};
+$("lgn").onclick=async()=>{if(!sb){toast("الواجهة محتاجة config.js");return}if(user)await sb.auth.signOut();else openAuth()};
+$("ax").onclick=()=>$("au").close();
+$("si").onclick=async()=>{const r=await sb.auth.signInWithPassword({email:$("ae").value.trim(),password:$("ap").value});if(r.error)toast(/invalid login credentials/i.test(r.error.message||"")?"بيانات الدخول غلط":"فشل الدخول: "+(r.error.message||"خطأ غير معروف"));else $("au").close()};
+$("su").onclick=async()=>{const r=await sb.auth.signUp({email:$("ae").value.trim(),password:$("ap").value});toast(r.error?r.error.message:"اتبعتلك إيميل تأكيد، افتحه وبعدين ادخل");};
+$("th").onclick=()=>{const d=document.documentElement,dk=matchMedia("(prefers-color-scheme:dark)").matches,cur=d.dataset.theme||(dk?"dark":"light");d.dataset.theme=cur=="dark"?"light":"dark"};
+
+let deals=[],myOffers=[],payTo={};
+async function loadDeals(){
+const S=await sb.from("settings").select("key,value").like("key","pay_to_%");payTo=Object.fromEntries((S.data||[]).map(x=>[x.key.slice(7),x.value]));
+const D=await sb.from("deals").select("*,listings(title)").order("created_at",{ascending:false});deals=D.data||[];
+const O=await sb.from("offers").select("id,amount,status,listings(title,request_id)").order("created_at",{ascending:false});myOffers=O.data||[];drawDeals()}
+const DS={pending_payment:"بانتظار سداد العمولة",proof_submitted:"إيصال قيد المراجعة",paid:"تم السداد",expired:"منتهية",cancelled:"ملغاة"};
+function drawDeals(){
+if(!user)return;
+const mine=id=>reqs.some(q=>q.id==id&&q.seller_id==user.id);
+const off=myOffers.filter(o=>o.status=="sent"&&mine(o.listings?.request_id)).map(o=>`<div class="card" style="margin-bottom:10px"><b>${esc(o.listings.title)}</b><p>عرض مشتري${o.amount?": "+f(o.amount):""}</p><button class="btn" data-acc="${o.id}">قبول العرض</button></div>`).join("");
+const dl=deals.map((d,i)=>{const seller=d.seller_id==user.id,pm=(payTo[d.country]||"").replace("instapay:","");let a="";
+if(d.status=="pending_payment"&&seller)a=`<p>حوّل <b>${f(d.total_due)}</b> (عمولة ${f(d.commission)} + ضريبة ${f(d.vat)}) عبر <b>إنستاباي</b> إلى <b dir="ltr">${esc(pm)}</b> واكتب المرجع <b dir="ltr">${esc(d.reference)}</b>. المهلة: ${new Date(d.due_at).toLocaleString("ar-EG")}</p><label>ارفع إيصال التحويل<input type="file" accept="image/*,application/pdf" data-up="${i}"></label>`;
+else if(d.status=="pending_payment")a="<p>بانتظار سداد العمولة قبل فتح بيانات التواصل.</p>";
+else if(d.status=="proof_submitted"&&!isOps)a="<p>استلمنا الإيصال وبنتأكد من وصول التحويل.</p>";
+if(isOps&&["pending_payment","proof_submitted"].includes(d.status))a+=`<p>${d.proof_path?`<button class="btn g" data-rc="${i}">عرض الإيصال</button> `:""}<button class="btn" data-ok="${i}">تأكيد وصول التحويل</button> ${d.proof_path?`<button class="btn g" data-no="${i}">رفض الإيصال</button>`:""}</p><p class="note">المرجع ${esc(d.reference)}. أكّد من كشف الحساب نفسه (المبلغ والمرجع)، مش من الصورة فقط.</p>`;
+if(d.status=="paid")a=`<p><button class="btn" data-ct="${i}">عرض بيانات الطرف الآخر</button></p><div id="ct${i}"></div>`;
+return `<div class="card" style="margin-bottom:10px"><b>${esc(d.listings?.title||"")}</b> <span class="pill">${DS[d.status]}</span><div class="row"><span>سعر البيع</span><b>${f(d.sale_price)}</b></div><div class="row"><span>المرجع</span><b dir="ltr">${esc(d.reference)}</b></div>${a}</div>`}).join("");
+$("dl").innerHTML=(off?"<h3>عروض واصلة</h3>"+off:"")+(dl?"<h3>الصفقات</h3>"+dl:"")||'<p class="note">مفيش عروض أو صفقات لسه.</p>'}
+$("dl").onclick=async e=>{const b=e.target.closest("button");if(!b||!sb)return;const d=b.dataset,D=x=>deals[+x];
+if(d.acc){const r=await sb.rpc("accept_offer",{p_offer:d.acc});toast(r.error?(/not configured/.test(r.error.message)?"طريقة سداد العمولة مش متاحة لبلدك لسه":"تعذر القبول"):"تم قبول العرض. تعليمات السداد في الأسفل وعلى إيميلك");load()}
+if(d.ok!=null){const r=await sb.rpc("confirm_payment",{p_deal:D(d.ok).id});toast(r.error?"تعذر التأكيد":"تم التأكيد وفتح بيانات التواصل");load()}
+if(d.no!=null){const r=await sb.rpc("reject_proof",{p_deal:D(d.no).id});toast(r.error?"تعذر الرفض":"اتطلب إيصال جديد");load()}
+if(d.rc!=null){const u=await sb.storage.from("documents").createSignedUrl(D(d.rc).proof_path,600);if(u.data)window.open(u.data.signedUrl,"_blank","noopener")}
+if(d.ct!=null){const r=await sb.rpc("get_deal_contact",{p_deal:D(d.ct).id});$("ct"+d.ct).innerHTML=(r.data||[]).map(x=>`<p>${x.role=="seller"?"البائع":"المشتري"}: <b>${esc(x.full_name||"-")}</b> <span dir="ltr">${esc(x.phone||"")}</span></p>`).join("")||"<p>غير متاح</p>"}};
+$("dl").onchange=async e=>{const i=e.target.dataset.up;if(i==null||!e.target.files[0])return;const fi=e.target.files[0],dd=deals[+i];
+if(fi.size>10485760){toast("الملف أكبر من 10MB");return}
+const path=`${user.id}/deals/${dd.id}/${crypto.randomUUID()}-${fi.name.replace(/[^\w.-]/g,"_")}`;
+const up=await sb.storage.from("documents").upload(path,fi);if(up.error){toast("تعذر رفع الإيصال");return}
+const r=await sb.rpc("submit_proof",{p_deal:dd.id,p_path:path});toast(r.error?"تعذر تسجيل الإيصال":"وصل الإيصال وهنراجعه");load()};
+if(C.supabaseUrl&&window.supabase){sb=supabase.createClient(C.supabaseUrl,C.supabaseAnonKey);
+sb.auth.onAuthStateChange((_e,s)=>{user=s?.user||null;setTimeout(load,0);if(user&&!subbed){subbed=true;sb.channel("rq").on("postgres_changes",{event:"*",schema:"public",table:"exit_requests"},()=>setTimeout(load,0)).subscribe()}})}
+else $("role").textContent="الواجهة محتاجة ملف config.js (انسخ config.example.js)";
+table();
+</script>
+</body>
+</html>
