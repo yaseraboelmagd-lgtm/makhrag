@@ -244,7 +244,7 @@ $("rq").onclick=async e=>{const b=e.target.closest("button");if(!b||!sb)return;c
 if(d.d!=null){const r=reqs[+d.d],q=await sb.from("documents").select("storage_path").eq("request_id",r.id);const L=[];for(const x of q.data||[]){const u=await sb.storage.from("documents").createSignedUrl(x.storage_path,600);if(u.data)L.push(`<a href="${esc(u.data.signedUrl)}" target="_blank" rel="noopener">${esc(x.storage_path.split("/").pop().slice(37,70))}</a>`)}b.parentNode.innerHTML=L.join("<br>")||"-"}
 if(d.p!=null){const r=reqs[+d.p],x=await sb.from("listings").insert({request_id:r.id,title:r.make_model,price:r.market_value,buyer_due:r.settlement_amount,mode:"settle",condition:r.condition,country:r.country,published:true});if(x.error){toast("تعذر النشر: "+x.error.message);return}await sb.from("exit_requests").update({status:"listed"}).eq("id",r.id);toast("اتنشر للمشترين");load()}
 if(d.pay!=null){const r=reqs[+d.pay];b.disabled=true;const x=await sb.functions.invoke("create-payment",{body:{request_id:r.id,purpose:"inspection"}});b.disabled=false;if(x.error||!x.data?.url){toast("تعذر فتح الدفع");return}location.href=x.data.url}};
-$("rq").onchange=async e=>{const i=e.target.dataset.i;if(i==null||!sb)return;const x=await sb.from("exit_requests").update({status:e.target.value}).eq("id",reqs[+i].id);toast(x.error?"مش مسموح":"اتحدثت الحالة وهيوصل إشعار للعميل");load()};
+$("rq").onchange=async e=>{const i=e.target.dataset.i;if(i==null||!sb)return;const x=await sb.from("exit_requests").update({status:e.target.value}).eq("id",reqs[+i].id);toast(x.error?"مش مسموح":"اتحدثت الحالة");load()};
 $("cl").onclick=async e=>{const b=e.target.closest("button[data-i]");if(!b)return;if(!user)return openAuth();const id=carIds[+b.dataset.i];if(!id){toast("ده عرض تجريبي");return}const r=await sb.from("offers").insert({listing_id:id});toast(r.error?(r.error.code=="23505"?"سبق وبعت اهتمامك":"تعذر الإرسال"):"وصل اهتمامك للفريق")};
 $("go").onclick=async()=>{
 if(!sb){toast("الواجهة مش متوصلة بقاعدة البيانات (config.js)");return}if(!user)return openAuth();
@@ -291,7 +291,7 @@ if(d.status=="paid")a=`<p><button class="btn" data-ct="${i}">عرض بيانات
 return `<div class="card" style="margin-bottom:10px"><b>${esc(d.listings?.title||"")}</b> <span class="pill">${DS[d.status]}</span><div class="row"><span>سعر البيع</span><b>${f(d.sale_price)}</b></div><div class="row"><span>المرجع</span><b dir="ltr">${esc(d.reference)}</b></div>${a}</div>`}).join("");
 $("dl").innerHTML=(off?"<h3>عروض واصلة</h3>"+off:"")+(dl?"<h3>الصفقات</h3>"+dl:"")||'<p class="note">مفيش عروض أو صفقات لسه.</p>'}
 $("dl").onclick=async e=>{const b=e.target.closest("button");if(!b||!sb)return;const d=b.dataset,D=x=>deals[+x];
-if(d.acc){const r=await sb.rpc("accept_offer",{p_offer:d.acc});toast(r.error?(/not configured/.test(r.error.message)?"طريقة سداد العمولة مش متاحة لبلدك لسه":"تعذر القبول"):"تم قبول العرض. تعليمات السداد في الأسفل وعلى إيميلك");load()}
+if(d.acc){const r=await sb.rpc("accept_offer",{p_offer:d.acc});toast(r.error?(/not configured/.test(r.error.message)?"طريقة سداد العمولة مش متاحة لبلدك لسه":"تعذر القبول"):"تم قبول العرض. تعليمات السداد في الأسفل");load()}
 if(d.ok!=null){const r=await sb.rpc("confirm_payment",{p_deal:D(d.ok).id});toast(r.error?"تعذر التأكيد":"تم التأكيد وفتح بيانات التواصل");load()}
 if(d.no!=null){const r=await sb.rpc("reject_proof",{p_deal:D(d.no).id});toast(r.error?"تعذر الرفض":"اتطلب إيصال جديد");load()}
 if(d.rc!=null){const u=await sb.storage.from("documents").createSignedUrl(D(d.rc).proof_path,600);if(u.data)window.open(u.data.signedUrl,"_blank","noopener")}
@@ -301,8 +301,14 @@ if(fi.size>10485760){toast("الملف أكبر من 10MB");return}
 const path=`${user.id}/deals/${dd.id}/${crypto.randomUUID()}-${fi.name.replace(/[^\w.-]/g,"_")}`;
 const up=await sb.storage.from("documents").upload(path,fi);if(up.error){toast("تعذر رفع الإيصال");return}
 const r=await sb.rpc("submit_proof",{p_deal:dd.id,p_path:path});toast(r.error?"تعذر تسجيل الإيصال":"وصل الإيصال وهنراجعه");load()};
+let ac=null;
+const unlock=()=>{try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state!=="running")ac.resume()}catch(e){}};
+addEventListener("pointerdown",unlock,{capture:true});addEventListener("keydown",unlock,{capture:true});
+const tone=()=>{if(!ac||ac.state!=="running")return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type="sine";o.frequency.value=880;g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.001,t+.8);o.start(t);o.stop(t+.8)};
+const beep=()=>{try{if(!ac){unlock();return}if(ac.state==="running")tone();else ac.resume().then(tone).catch(()=>{})}catch(e){}};
+const alertNew=(r)=>{beep();toast("طلب جديد"+(r&&r.make_model?"："+r.make_model:""));if("Notification"in window&&Notification.permission==="granted"){try{new Notification("طلب جديد في مخرج",{body:r?String(r.make_model||""):""})}catch(e){}}};
 if(C.supabaseUrl&&window.supabase){sb=supabase.createClient(C.supabaseUrl,C.supabaseAnonKey);
-sb.auth.onAuthStateChange((_e,s)=>{user=s?.user||null;setTimeout(load,0);if(user&&!subbed){subbed=true;sb.channel("rq").on("postgres_changes",{event:"*",schema:"public",table:"exit_requests"},()=>setTimeout(load,0)).subscribe()}})}
+sb.auth.onAuthStateChange((_e,s)=>{user=s?.user||null;setTimeout(load,0);if(user&&"Notification"in window&&Notification.permission==="default")Notification.requestPermission();if(user&&!subbed){subbed=true;sb.channel("rq").on("postgres_changes",{event:"*",schema:"public",table:"exit_requests"},(p)=>{if(isOps&&p.eventType==="INSERT")alertNew(p.new);setTimeout(load,0)}).subscribe()}})}
 else $("role").textContent="الواجهة محتاجة ملف config.js (انسخ config.example.js)";
 table();
 </script>
